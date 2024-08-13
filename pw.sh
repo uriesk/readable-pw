@@ -31,7 +31,7 @@ EC="\e[0m"
 
 [ -f "${TRIGRAM_FILE}" ] || {
   echo "Download a trigram file, unpack it and edit this script to set its filename"
-  echo "http://practicalcryptography.com/cryptanalysis/letter-frequencies-various-languages"
+  echo "http://practicalcryptography.com/cryptanalysis/letter-frequencies-various-languages/"
   exit 1
 }
 
