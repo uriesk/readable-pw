@@ -3,7 +3,7 @@
 # amount of words
 WORD_AMOUNT=2
 # minimum length of a word
-WORD_LEN_MIN=7
+WORD_LEN_MIN=8
 # max length of a word
 WORD_LEN_MAX=11
 # seperator set (random char will be chosen as seperator)
@@ -43,13 +43,13 @@ get_all_trigrams () {
   CNT=0
   while read -r line; do
     CNT=$(($CNT+${line#* }))
-    if [ ${WEIGHTS%%,*} -le ${CNT} ]; then
+    while [ ${WEIGHTS%%,*} -le ${CNT} ]; do
       TMP_TRIGRAMS="${TMP_TRIGRAMS}${line% *},"
       WEIGHTS=${WEIGHTS#*,}
       if [ -z ${WEIGHTS} ]; then
         return
       fi
-    fi
+    done
   done < "${TRIGRAM_FILE}"
 }
 
