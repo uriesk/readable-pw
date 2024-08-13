@@ -10,12 +10,17 @@ WORD_LEN_MIN=7
 WORD_LEN_MAX=11
 # seperator set (random char will be chosen as seperator)
 SEPERATORS="_.:_ "
-# end char set
-START_CHAR_SET=""
 # start char set
-END_CHAR_SET="0123456789"
+START_CHAR_SET=""
+# end char set
+END_CHAR_SET=""
+# second end char set
+SECOND_END_CHAR_SET=""
+# third end char set
+THIRD_END_CHAR_SET="0123456789"
 # chars to exclude
-EXCLUDED_CHARS=""
+# chars to exclude
+EXCLUDED_CHARS="ÑÄÖÜ"
 # colored output ("y" means yes, otherwise no)
 COLORED="y"
 # sort by rarest n-gram
@@ -130,9 +135,23 @@ generate_password () {
       generate_word
     done
 
+    if [ "${END_CHAR_SET}" ] || [ "${SECOND_END_CHAR_SET}" ] || [ "${THIRD_END_CHAR_SET}" ]; then
+     TMP_PASSWORD="${TMP_PASSWORD}${SEPERATOR}"
+    fi
+
     get_random_char "${END_CHAR_SET}"
     if [ "${TMP_CHAR}" ]; then
-     TMP_PASSWORD="${TMP_PASSWORD}${SEPERATOR}${TMP_CHAR}"
+     TMP_PASSWORD="${TMP_PASSWORD}${TMP_CHAR}"
+    fi
+
+    get_random_char "${SECOND_END_CHAR_SET}"
+    if [ "${TMP_CHAR}" ]; then
+     TMP_PASSWORD="${TMP_PASSWORD}${TMP_CHAR}"
+    fi
+
+    get_random_char "${THIRD_END_CHAR_SET}"
+    if [ "${TMP_CHAR}" ]; then
+     TMP_PASSWORD="${TMP_PASSWORD}${TMP_CHAR}"
     fi
 
     if [ -z "${EXCLUDED_CHARS}" ] || echo "${TMP_PASSWORD}" | sed "/[${EXCLUDED_CHARS}]/q1" >/dev/null; then
@@ -147,7 +166,7 @@ generate_passwords () {
     generate_password
     LEN=${#TMP_PASSWORD}
     #pad password for output
-    TMP_PASSWORD=`awk -- "BEGIN {print substr (\"$TMP_PASSWORD                          \", 1, $(($WORD_LEN_MAX*$WORD_AMOUNT+2)))}"`
+    TMP_PASSWORD=`awk -- "BEGIN {print substr (\"$TMP_PASSWORD                          \", 1, $(($WORD_LEN_MAX*$WORD_AMOUNT+4)))}"`
     if [ "${COLORED}" = "y" ]; then
       printf "${TMP_PASSWORD} \t${L}length: ${LG}${LEN} \t${L}rarest n-gram: ${LG}${TMP_RAREST_TRIGRAM}${EC}\n"
     else
